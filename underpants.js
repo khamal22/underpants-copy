@@ -20,7 +20,10 @@ var _ = {};
 *   _.identity(5) === 5
 *   _.identity({a: "b"}) === {a: "b"}
 */
-
+_.identity = function(value){
+    //return value unchanged 
+    return value;
+}
 
 /** _.typeOf
 * Arguments:
@@ -42,6 +45,29 @@ var _ = {};
 * _.typeOf([1,2,3]) -> "array"
 */
 
+/*
+I:any value
+O:the value as a string
+C:
+E: 
+*/
+_.typeOf = function(value){
+    //check to see if value is equal to null and return a string
+    if (value === null) {
+        return 'null';
+    }
+    //check to see if array is array and return it as string 
+    if (Array.isArray(value)) {
+        return 'array';
+    }
+    //check if value is object and rerturn it as a string 
+    if (typeof value === 'object') {
+        return 'object';
+    }
+    return typeof value;
+}
+
+
 
 /** _.first
 * Arguments:
@@ -60,6 +86,36 @@ var _ = {};
 *   _.first(["a", "b", "c"], 1) -> "a"
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
+/*
+I:an array and number
+O:return just the first element in <array>
+C:
+E:What if <number> is negative? What if <number> is greater than <array>.length?
+
+*/
+
+_.first = function(array, number){
+    // Check if the input is an array
+    if (!Array.isArray(array)) {
+        return [];
+      }
+    
+      // If `number` is not provided or not a number, return the first element
+      if (typeof number !== 'number') {
+        return array[0];
+      }
+    
+      // Handle the case where `number` is negative
+      if (number < 0) {
+        return [];
+      }
+    
+      // Return the first `number` items of the array
+      return array.slice(0, number);
+};
+
+
+
 
 
 /** _.last
@@ -79,7 +135,12 @@ var _ = {};
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
-
+    /*
+    I: an array and a number 
+    O: If <number> is not given or not a number, return just the last element in <array>.
+    C:
+    E:
+    */
 
 /** _.indexOf
 * Arguments:
@@ -158,6 +219,25 @@ var _ = {};
 *   use _.each in your implementation
 */
 
+/*
+I:takes in array and function 
+O:returns a new array 
+
+
+*/
+    _.filter = function(array, func){
+        //create output array
+        let output = []
+        //use for loop to iterate over array
+        for (let i = 0; i < array.length; i++){
+            //determine if result of invoking func is true
+            if(func(array[i],i, array) === true){
+                output.push(array[i])
+            }
+        }
+            return output
+
+    }
 
 /** _.reject
 * Arguments:
