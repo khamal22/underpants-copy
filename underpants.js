@@ -20,7 +20,7 @@ var _ = {};
 *   _.identity(5) === 5
 *   _.identity({a: "b"}) === {a: "b"}
 */
-_.identity = function(value){
+_.identity = function (value) {
     //return value unchanged 
     return value;
 }
@@ -51,7 +51,7 @@ O:the value as a string
 C:
 E: 
 */
-_.typeOf = function(value){
+_.typeOf = function (value) {
     //check to see if value is equal to null and return a string
     if (value === null) {
         return 'null';
@@ -94,24 +94,24 @@ E:What if <number> is negative? What if <number> is greater than <array>.length?
 
 */
 
-_.first = function(array, number){
+_.first = function (array, number) {
     // Check if the input is an array
     if (!Array.isArray(array)) {
         return [];
-      }
-    
-      // If `number` is not provided or not a number, return the first element
-      if (typeof number !== 'number') {
+    }
+
+    // If `number` is not provided or not a number, return the first element
+    if (typeof number !== 'number') {
         return array[0];
-      }
-    
-      // Handle the case where `number` is negative
-      if (number < 0) {
+    }
+
+    // Handle the case where `number` is negative
+    if (number < 0) {
         return [];
-      }
-    
-      // Return the first `number` items of the array
-      return array.slice(0, number);
+    }
+
+    // Return the first `number` items of the array
+    return array.slice(0, number);
 };
 
 
@@ -135,12 +135,36 @@ _.first = function(array, number){
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
-    /*
-    I: an array and a number 
-    O: If <number> is not given or not a number, return just the last element in <array>.
-    C:
-    E:
-    */
+/*
+I: an array and a number 
+O: If <number> is not given or not a number, return just the last element in <array>.
+C:
+E:
+*/
+
+_.last = function (array, number) {
+    // Check if the input is an array
+    if (!Array.isArray(array)) {
+        return [];
+    }
+
+    // If `number` is not provided or not a number, return the last element
+    if (typeof number !== 'number') {
+        return array[array.length - 1];
+    }
+
+    // Handle the case where `number` is negative
+    if (number < 0) {
+        return [];
+    }
+
+    // Return the first `number` items of the array
+    // creates a 
+    return array.slice(-1 * number);
+}
+
+
+
 
 /** _.indexOf
 * Arguments:
@@ -157,6 +181,30 @@ _.first = function(array, number){
 *   _.indexOf(["a","b","c"], "c") -> 2
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
+/*
+I: an array and value 
+O:Return the index of <array> that is the first occurrance of <value>Return -1 if <value> is not in <array>
+C:
+E:Do not use [].indexOf()!, What if <array> has multiple occurances of val?, What if <val> isn't in <array>?
+*/
+_.indexOf = function (array, value) {
+    //loop through each element in the array
+    for (let i = 0; array.length > i; i++) {
+        //check if the curent element matches the value
+        if (array[i] == value) {
+            //return the index of the first occurernence
+            return i
+        }
+    }
+
+    //return -1 if the value is not found 
+    return -1
+}
+
+
+
+
+
 
 
 /** _.contains
@@ -173,6 +221,31 @@ _.first = function(array, number){
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+/*
+I:an array and value 
+O:a boolean 
+C:
+E:
+
+
+*/
+_.contains = function (array, value) {
+    // Initialize a variable to keep track of whether the value is found
+    var found = false;
+
+    // Iterate through each element of the array
+    for (var i = 0; i < array.length; i++) {
+        // Check if the current element is equal to the value
+        if (array[i] === value) {
+            found = true;
+        }
+    }
+
+    // Use the ternary operator to return true or false based on the found variable
+    return found ? true : false;
+}
+
+
 
 
 /** _.each
@@ -190,6 +263,30 @@ _.first = function(array, number){
 *   _.each(["a","b","c"], function(e,i,a){ console.log(e)});
 *      -> should log "a" "b" "c" to the console
 */
+    /*
+    I:a collection and function  
+    O:
+    C:
+    E:
+    */
+        _.each = function(collection, func){
+            if (Array.isArray(collection)) {
+                // Iterate over array elements
+                collection.forEach((element, index) => {
+                    func(element, index, collection);
+                });
+            } else if (typeof collection === 'object' && collection !== null) {
+                // Iterate over object properties
+                for (let key in collection) {
+                    //returns a boolean indicating whether this object has the specified property as its own property
+                    if (collection.hasOwnProperty(key)) {
+                        func(collection[key], key, collection);
+                    }
+                }
+            }
+        }
+
+
 
 
 /** _.unique
@@ -201,7 +298,15 @@ _.first = function(array, number){
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
-
+        /*
+        I:an array 
+        O:a new array of all elments from array with duplicates removed 
+        C:
+        E:
+        */
+        _.unique = function(){
+            
+        }
 
 /** _.filter
 * Arguments:
@@ -225,19 +330,19 @@ O:returns a new array
 
 
 */
-    _.filter = function(array, func){
-        //create output array
-        let output = []
-        //use for loop to iterate over array
-        for (let i = 0; i < array.length; i++){
-            //determine if result of invoking func is true
-            if(func(array[i],i, array) === true){
-                output.push(array[i])
-            }
+_.filter = function (array, func) {
+    //create output array
+    let output = []
+    //use for loop to iterate over array
+    for (let i = 0; i < array.length; i++) {
+        //determine if result of invoking func is true
+        if (func(array[i], i, array) === true) {
+            output.push(array[i])
         }
-            return output
-
     }
+    return output
+
+}
 
 /** _.reject
 * Arguments:
@@ -385,8 +490,8 @@ O:returns a new array
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-if((typeof process !== 'undefined') &&
-   (typeof process.versions.node !== 'undefined')) {
+if ((typeof process !== 'undefined') &&
+    (typeof process.versions.node !== 'undefined')) {
     // here, export any references you need for tests //
     module.exports = _;
 }
