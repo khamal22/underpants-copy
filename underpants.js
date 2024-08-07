@@ -304,8 +304,15 @@ _.contains = function (array, value) {
         C:
         E:
         */
-        _.unique = function(){
-            
+        _.unique = function(array){
+            var box = []; // This will hold the unique elements
+            for (var i = 0; i < array.length; i++) { // Iterate through the input array
+                // Check if the current element is not already in the 'box' array
+                if (_.indexOf(box, array[i]) === -1) {
+                    box.push(array[i]); // Add it to 'box' if it's not a duplicate
+                }
+            }
+            return box; // Return the array of unique elements
         }
 
 /** _.filter
@@ -393,6 +400,14 @@ _.filter = function (array, func) {
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
+_.map = function(array, func){
+    let output = []
+    for(let i = 0; i < array.length; i++){
+        output.push(func(array[i], i, array))
+
+    }
+    return output;
+}
 
 
 /** _.pluck
