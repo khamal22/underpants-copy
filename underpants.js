@@ -20,8 +20,9 @@ var _ = {};
 *   _.identity(5) === 5
 *   _.identity({a: "b"}) === {a: "b"}
 */
-
-
+    _.identity = function(value){
+        return value;
+    }
 /** _.typeOf
 * Arguments:
 *   1) Any value
@@ -41,7 +42,18 @@ var _ = {};
 * _.typeOf("javascript") -> "string"
 * _.typeOf([1,2,3]) -> "array"
 */
+    _.typeOf = function(value){
+        //if value is null return null 
+        if (value === null) {
+            return "null";
+        }
+        //if value is array return array 
+        if (Array.isArray(value)) {
+            return "array";
+        }
 
+        return typeof value;
+    }
 
 /** _.first
 * Arguments:
@@ -60,7 +72,25 @@ var _ = {};
 *   _.first(["a", "b", "c"], 1) -> "a"
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
-
+_.first = function(array, number){
+     // Check if the input is an array
+     if (!Array.isArray(array)) {
+        return [];
+    }
+    
+    // If number is not given or is not a number, return the first element
+    if (typeof number !== 'number') {
+        return array[0];
+    }
+    
+    // Handle negative numbers by returning an empty array
+    if (number < 0) {
+        return [];
+    }
+    
+    // Return the first 'number' items of the array
+    return array.slice(0, number);
+}
 
 /** _.last
 * Arguments:
@@ -79,7 +109,25 @@ var _ = {};
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
-
+_. last = function(array, number) {
+    // Check if the input is an array
+    if (!Array.isArray(array)) {
+        return [];
+    }
+    
+    // If number is not given or is not a number, return the last element
+    if (typeof number !== 'number') {
+        return array[array.length - 1];
+    }
+    
+    // Handle negative numbers by returning an empty array
+    if (number < 0) {
+        return [];
+    }
+    
+    // Return the last 'number' items of the array
+    return array.slice(-number);
+}
 
 /** _.indexOf
 * Arguments:
@@ -96,6 +144,23 @@ var _ = {};
 *   _.indexOf(["a","b","c"], "c") -> 2
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
+_.indexOf = function(array, value){
+    // Check if the input is an array
+    if (!Array.isArray(array)) {
+        return -1; // Return -1 for non-array inputs
+    }
+    
+    // Loop through the array to find the first occurrence of the value
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === value) {
+            return i; // Return the index of the first occurrence
+        }
+    }
+    
+    // If the value is not found, return -1
+    return -1;
+}
+
 
 
 /** _.contains
@@ -112,7 +177,22 @@ var _ = {};
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+_.contains = function(array, value){
+        // Check if the array is falsy or has no elements
+    if(!array || array.length === 0){
+        return false;
+    }
 
+    // Iterate through each element in the array
+    for( let i = 0; i < array.length; i++){
+    // Check if the current element is strictly equal to the given value
+        if(array[i] === value){
+            return true;
+        }
+    }
+    // If no match was found after checking all elements, return false
+    return false;
+}
 
 /** _.each
 * Arguments:
@@ -129,7 +209,26 @@ var _ = {};
 *   _.each(["a","b","c"], function(e,i,a){ console.log(e)});
 *      -> should log "a" "b" "c" to the console
 */
-
+_.each = function(collection, func){
+  // Check if the collection is an array
+  if (Array.isArray(collection)) {
+    // Iterate over each element in the array
+    for (let i = 0; i < collection.length; i++) {
+        // Call the function with the element, its index, and the collection
+        func(collection[i], i, collection);
+    }
+} 
+// Check if the collection is an object
+else if (typeof collection === 'object' && collection !== null) {
+    // Iterate over each property in the object
+    for (const key in collection) {
+        if (collection.hasOwnProperty(key)) {
+            // Call the function with the property's value, its key, and the collection
+            func(collection[key], key, collection);
+        }
+    }
+}
+}
 
 /** _.unique
 * Arguments:
@@ -140,7 +239,19 @@ var _ = {};
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+_.unique = function(array){
+    const uniqueArray = []; // Array to hold unique elements
 
+    // Iterate through each element in the input array
+    for (let i = 0; i < array.length; i++) {
+        // Use indexOf to check if the element is already in the uniqueArray
+        if (_.indexOf(uniqueArray, array[i]) === -1) {
+            uniqueArray.push(array[i]); // Add it to uniqueArray if not found
+        }
+    }
+
+    return uniqueArray; // Return the array of unique elements
+}
 
 /** _.filter
 * Arguments:
@@ -209,6 +320,30 @@ var _ = {};
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
 
+_.map = function(collection, func){
+    const output = []
+    //if collection is an array 
+    if(Array.isArray(collection)){
+        //loop over each item in collection 
+        for(let i = 0; i < collection.length; i++){
+            let result = func(collection[i], i, collection)
+            //
+            output.push(result);
+        }
+    }else{//else its an object 
+        for(let key in collection){
+            output.push(func(collection[key], key, collection))
+        }
+    }
+    return output
+}
+
+
+
+
+
+
+
 
 /** _.pluck
 * Arguments:
@@ -242,6 +377,36 @@ var _ = {};
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
+
+
+_.every = function(collection, func){
+    if(Array.isArray(collection)){
+        if(!func){
+    
+
+}else{
+
+}    
+    }else{
+        if(!func){
+
+        }else{
+
+        }
+    }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 /** _.some
