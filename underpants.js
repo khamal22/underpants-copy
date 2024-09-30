@@ -269,6 +269,22 @@ _.unique = function(array){
 *   use _.each in your implementation
 */
 
+_.filter = function(array, func){
+    const result = [];
+    
+    _.each(array, function(element, index, array) {
+        // Call the predicate with the current element, index, and array
+        if (func(element, index, array)) {
+            result.push(element);
+        }
+    });
+
+    return result;
+}
+
+
+
+
 
 /** _.reject
 * Arguments:
@@ -282,7 +298,18 @@ _.unique = function(array){
 * Examples:
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
+_.reject = function(array, func){
+    const result = [];
+    
+    _.each(array, function(element, index, array) {
+        // Call the predicate with the current element, index, and array
+        if (!func(element, index, array)) {
+            result.push(element);
+        }
+    });
 
+    return result;
+}
 
 /** _.partition
 * Arguments:
@@ -302,7 +329,22 @@ _.unique = function(array){
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+    _.partition = function(array, func){
+        const truthy = [];
+        const falsy = [];
+        
+        _.each(array, function(element, index, arr) {
+            // Call the predicate with the current element, index, and array
+            if (func(element, index, arr)) {
+                truthy.push(element); // Add to truthy array
+            } else {
+                falsy.push(element);  // Add to falsy array
+            }
+        });
+    
+        return [truthy, falsy]; // Return the arrays as a nested array
 
+    }
 
 /** _.map
 * Arguments:
@@ -355,7 +397,12 @@ _.map = function(collection, func){
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
-
+_.pluck = function(array, property){
+        // Use _.map() to create a new array containing the value of the specified property
+        return _.map(array, function(item) {
+            return item[property];
+        });
+}
 
 /** _.every
 * Arguments:
@@ -380,20 +427,35 @@ _.map = function(collection, func){
 
 
 _.every = function(collection, func){
-    if(Array.isArray(collection)){
-        if(!func){
-    
+    // If no function is provided, create a default function that checks for truthiness
+    if (!func) {
+        func = function(value) {
+            return !!value; // Convert value to boolean
+        };
+    }
 
-}else{
-
-}    
-    }else{
-        if(!func){
-
-        }else{
-
+    // Check if the collection is an array
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            // Call the function with current element, index, and collection
+            if (!func(collection[i], i, collection)) {
+                return false; // If any return false, return false
+            }
+        }
+    } else {
+        // If the collection is an object
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                // Call the function with current value, key, and collection
+                if (!func(collection[key], key, collection)) {
+                    return false; // If any return false, return false
+                }
+            }
         }
     }
+
+    // If all function calls returned true, return true
+    return true;
   
 }
 
@@ -429,7 +491,37 @@ _.every = function(collection, func){
 *   _.some([1,3,5], function(e){return e % 2 === 0}) -> false
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
+_.some = function(collection, func) {
+    // If no function is provided, create a default function that checks for truthiness
+    if (!func) {
+        func = function(value) {
+            return !!value; // Convert value to boolean
+        };
+    }
 
+    // Check if the collection is an array
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            // Call the function with current element, index, and collection
+            if (func(collection[i], i, collection)) {
+                return true; // Return true if any call returns true
+            }
+        }
+    } else {
+        // If the collection is an object
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                // Call the function with current value, key, and collection
+                if (func(collection[key], key, collection)) {
+                    return true; // Return true if any call returns true
+                }
+            }
+        }
+    }
+
+    // If no calls returned true, return false
+    return false;
+};
 
 /** _.reduce
 * Arguments:
@@ -449,7 +541,21 @@ _.every = function(collection, func){
 * Examples:
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
-
+_.reduce = function(array, func, seed){
+    let result;
+    if(seed === undefined){
+        result = array[0]
+        for(let i = 1; i < array.length; i++){
+            result = func(result, array[i], i)
+        }
+    }else{
+        result = seed
+        for(let i = 0; i < array.length; i++){
+            result = func(result, array[i],i )
+        }
+    }
+    return result
+}
 
 /** _.extend
 * Arguments:
@@ -466,6 +572,24 @@ _.every = function(collection, func){
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
 
+
+_.extend = function(target, ...objects){
+    // Iterate over each object passed in
+    for (const obj of objects) {
+        // Iterate over each property in the current object
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                // Copy the property to the target object
+                target[key] = obj[key];
+            }
+        }
+    }
+    // Return the updated target object
+    return target;
+}
+
+
+
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -474,4 +598,4 @@ if((typeof process !== 'undefined') &&
    (typeof process.versions.node !== 'undefined')) {
     // here, export any references you need for tests //
     module.exports = _;
-}
+} 
